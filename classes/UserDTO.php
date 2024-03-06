@@ -49,17 +49,33 @@ class UserDTO
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getUserById(string $id)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    public function getUserByEmail(string $email)
+    {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    
     public function isUserAdmin($userId)
     {
         $stmt = $this->conn->prepare("SELECT isAdmin FROM users WHERE id = :userId");
         $stmt->execute(['userId' => $userId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Verifica se l'utente esiste e se è un amministratore
+
         if ($result && $result['isAdmin']) {
-            return true; // L'utente è un amministratore
+            return true; 
         } else {
-            return false; // L'utente non è un amministratore
+            return false;
         }
     }
 }

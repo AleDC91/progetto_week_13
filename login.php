@@ -30,8 +30,8 @@ if (isset($_SESSION["isLogged"])) {
 ?>
 
 <h1 class="text-center">Login</h1>
-
 <?php 
+
 
 $form = new Form("controller.php");
 $form->setButtonName("Login");

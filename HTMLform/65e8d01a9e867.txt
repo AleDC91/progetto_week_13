@@ -1,0 +1,16 @@
+<form class='mt-5' action='controller.php' method='POST'> 
+            <div class='mb-3'>
+                <label for='firstname' class='form-label'>Firstname</label>
+                <input type='text' id='firstname' name='firstname' class='form-control'>
+                </div> <div class='mb-3'>
+                <label for='lastname' class='form-label'>Lastname</label>
+                <input type='text' id='lastname' name='lastname' class='form-control'>
+                </div>  <div class='mb-3'>
+                <label for='email' class='form-label'>Email</label>
+                <input type='email' id='email' name='email' class='form-control'>
+                </div>  <div class='mb-3'>
+                <label for='password' class='form-label'>Password</label>
+                <input type='password' id='password' name='password' class='form-control'>
+                </div>    
+            <button type='submit' name='edit' id='edit' class='btn btn-primary mb-5'>Save</button>
+            </form>

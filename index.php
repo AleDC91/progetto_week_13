@@ -34,6 +34,8 @@ if (isset($_SESSION["isLogged"])) {
     $_SESSION["lastName"] = $user["lastname"];
     $_SESSION["userEmail"] = $user["email"];
     $_SESSION["userID"] = $user["id"];
+    $_SESSION["userPassword"] = $user["password"];
+    $_SESSION["isAdmin"] = $user["isAdmin"];
 
 } else {
     header("Location: http://localhost/login.php");

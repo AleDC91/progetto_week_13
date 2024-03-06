@@ -30,14 +30,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         <?php 
                         if($isAdmin && $currentPage != "admin.php"){ ?>
                         <li class="p-0 m-0 ms-lg-5 nav-item">
-                            <a class="nav-link bg-primary rounded-3 p-2" href="admin.php"> ADMIN </a>
+                            <a class="nav-link bg-primary rounded-3 p-2 text-white" href="admin.php"> ADMIN </a>
                         </li>
                         
                         <?php } ?>
                         <?php 
                         if($isAdmin && $currentPage == "admin.php"){ ?>
                         <li class="p-0 m-0 ms-lg-5 nav-item">
-                            <a class="nav-link bg-primary rounded-3 p-2" href="index.php"> HOME </a>
+                            <a class="nav-link bg-primary rounded-3 p-2 text-white" href="index.php"> HOME </a>
                         </li>
                         
                         <?php } ?>

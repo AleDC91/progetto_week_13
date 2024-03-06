@@ -5,7 +5,8 @@ class User {
         private string $firstname,
         private string $lastname,
         private string $email,
-        private string $password
+        private string $password,
+        private ?int $id = null
     ){}
 
     public function __get($name)
