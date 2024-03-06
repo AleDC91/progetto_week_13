@@ -19,19 +19,22 @@ $conn = $dbPDO->getConnection();
 $userDTO = new UserDTO($conn);
 
 $isLogged = false;
+$isAdmin = false;
 
 session_start();
 if (isset($_SESSION["isLogged"])) {
     $isLogged = true;
+
 } else if (isset($_COOKIE["auth_token"])) {
     $user = $userDTO->getUserByToken($_COOKIE["auth_token"]);
 
     $_SESSION["isLogged"] = true;
+    $isLogged = true;
     $_SESSION["userName"] = $user["firstname"];
     $_SESSION["lastName"] = $user["lastname"];
     $_SESSION["userEmail"] = $user["email"];
     $_SESSION["userID"] = $user["id"];
-    
+
 } else {
     header("Location: http://localhost/login.php");
     exit();

@@ -60,7 +60,8 @@ namespace db {
             lastname VARCHAR(50) NOT NULL,
             email VARCHAR(100) NOT NULL UNIQUE,
             password VARCHAR(255) NOT NULL,
-            auth_token VARCHAR(255)
+            auth_token VARCHAR(255),
+            isAdmin BOOL NOT NULL DEFAULT FALSE
             )";
 
             $conn->exec($createTableQuery);
@@ -82,7 +83,7 @@ namespace db {
             
             $defaultUsers = require_once('settings/defaultUsers.php');
 
-            $insertQuery = "INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)";
+            $insertQuery = "INSERT INTO users (firstname, lastname, email, password, isAdmin) VALUES (?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($insertQuery);
 
             foreach ($defaultUsers as $user) {

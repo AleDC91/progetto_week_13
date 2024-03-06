@@ -2,6 +2,7 @@
 session_start();
 $username = isset($_SESSION["userName"]) ? $_SESSION["userName"] : "guest";
 $isLogged = isset($_SESSION["isLogged"]) && $_SESSION["isLogged"];
+$isAdmin = isset($_SESSION["isAdmin"]) && $_SESSION["isAdmin"];
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
@@ -14,7 +15,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav w-100 <?php if($isLogged){ ?>justify-content-between<?php } else { ?>justify-content-end<?php } ?>">
+            <ul class="navbar-nav w-100 <?php if ($isLogged) { ?>justify-content-between<?php } else { ?>justify-content-end<?php } ?>">
                 <div class=" nav-items-left d-flex flex-column flex-lg-row ">
 
                     <?php
@@ -24,10 +25,24 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                         </li>
 
                         <li class="p-0 m-0 ms-lg-5 saluto nav-item">
-                        <a class="nav-link"> <?php echo "Hi, " . $_SESSION["userName"] . "!" ?></a>
-                    </li>
+                            <a class="nav-link"> <?php echo "Hi, " . $_SESSION["userName"] . "!" ?></a>
+                        </li>
+                        <?php 
+                        if($isAdmin && $currentPage != "admin.php"){ ?>
+                        <li class="p-0 m-0 ms-lg-5 nav-item">
+                            <a class="nav-link bg-primary rounded-3 p-2" href="admin.php"> ADMIN </a>
+                        </li>
+                        
+                        <?php } ?>
+                        <?php 
+                        if($isAdmin && $currentPage == "admin.php"){ ?>
+                        <li class="p-0 m-0 ms-lg-5 nav-item">
+                            <a class="nav-link bg-primary rounded-3 p-2" href="index.php"> HOME </a>
+                        </li>
+                        
+                        <?php } ?>
 
-                    
+
                 </div>
                 <div class="d-lg-flex">
                     <!-- <li class="nav-item dropdown me-5">
@@ -49,22 +64,22 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             </li>
                         </ul>
                     </li> -->
-                    <?php } ?>
-                    <?php
+                <?php } ?>
+                <?php
 
-                    if ($isLogged) { ?>
-                        <form action="controller.php" method="POST" class="mx-2 my-auto">
-                            <button class="btn btn-dark" name="logout">Logout</button>
-                        </form>
-                    <?php } ?>
+                if ($isLogged) { ?>
+                    <form action="controller.php" method="POST" class="mx-2 my-auto">
+                        <button class="btn btn-dark" name="logout">Logout</button>
+                    </form>
+                <?php } ?>
 
-                    <?php if (!$isLogged && $currentPage == "login.php") { ?>
-                        <a href="register.php"> <button class="btn btn-dark my-auto">Register</button></a>
-                    <?php } ?>
+                <?php if (!$isLogged && $currentPage == "login.php") { ?>
+                    <a href="register.php"> <button class="btn btn-dark my-auto">Register</button></a>
+                <?php } ?>
 
-                    <?php if (!$isLogged && $currentPage != "login.php") { ?>
-                        <a href="login.php"> <button class="btn btn-dark my-auto">Login</button></a>
-                    <?php } ?>
+                <?php if (!$isLogged && $currentPage != "login.php") { ?>
+                    <a href="login.php"> <button class="btn btn-dark my-auto">Login</button></a>
+                <?php } ?>
                 </div>
 
 

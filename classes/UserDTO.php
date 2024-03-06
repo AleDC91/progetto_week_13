@@ -19,9 +19,9 @@ class UserDTO
     public function getAllUsersEmail($config)
     {
         $db = $config['database'];
-        echo $db;
+        // echo $db;
         $sql = "SELECT email FROM  $db.users";
-        echo $sql;
+        // echo $sql;
         $res = $this->conn->query($sql, PDO::FETCH_ASSOC);
         return $res ? $res : null;
     }
@@ -47,5 +47,19 @@ class UserDTO
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE auth_token = :token");
         $stmt->execute(['token' => $token]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function isUserAdmin($userId)
+    {
+        $stmt = $this->conn->prepare("SELECT isAdmin FROM users WHERE id = :userId");
+        $stmt->execute(['userId' => $userId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Verifica se l'utente esiste e se è un amministratore
+        if ($result && $result['isAdmin']) {
+            return true; // L'utente è un amministratore
+        } else {
+            return false; // L'utente non è un amministratore
+        }
     }
 }

@@ -110,6 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION["lastName"] = $user["lastname"];
                 $_SESSION["userEmail"] = $user["email"];
                 $_SESSION["userID"] = $user["id"];
+                $_SESSION["isAdmin"] = $user["isAdmin"];
                 break;
             }
         }
