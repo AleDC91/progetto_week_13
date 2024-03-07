@@ -1,0 +1,12 @@
+[2024-03-07 14:39:31] [INFO]: Logoutale
+[2024-03-07 14:40:19] [INFO]: Tentativo login
+[2024-03-07 14:41:01] [INFO]: Registrazione effettuata utente: , ID: 
+[2024-03-07 14:42:15] [INFO]: Logout Ale
+[2024-03-07 14:42:43] [INFO]: Utente ID: 3Loggato
+[2024-03-07 14:43:08] [INFO]: Logout Giuseppe
+[2024-03-07 14:43:26] [INFO]: Utente ID: 1 Loggato
+[2024-03-07 14:43:34] [INFO]: Utente ID: 4eliminato
+[2024-03-07 14:45:29] [INFO]: Utente ID: 7eliminato
+[2024-03-07 15:08:32] [ERROR]: Utente non trovato nel DB
+[2024-03-07 15:08:39] [INFO]: Utente ID: 3eliminato
+[2024-03-07 15:12:59] [INFO]: Logout Admin

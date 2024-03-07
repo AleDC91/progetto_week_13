@@ -1,8 +1,10 @@
 <?php
 
 require_once('User.php');
+require_once('Logger.php');
 
 
+$logger = Logger::getInstance();
 class Admin extends User
 {
     private PDO $conn;
@@ -34,6 +36,8 @@ class Admin extends User
 
     public function createUser(User $user)
     {
+    $logger = Logger::getInstance();
+
         try {
             $sql = "INSERT INTO users (firstname,lastname,email,password) VALUES (:firstname,:lastname,:email,:password)";
             $stm = $this->conn->prepare($sql);
@@ -49,12 +53,15 @@ class Admin extends User
                 return false;
             }
         } catch (\PDOException $e) {
+            $logger->log($e->getMessage(), "ERROR");
             echo "Error: " . $e->getMessage();
         }
     }
 
     public function deleteUser(User $user)
     {
+        $logger = Logger::getInstance();
+
         try {
             $sql = "DELETE FROM users WHERE id = :id";
             $stm = $this->conn->prepare($sql);
@@ -65,13 +72,21 @@ class Admin extends User
                 return false;
             }
         } catch (\PDOException $e) {
-            echo "Error: " . $e->getMessage();
+            $logger->log($e->getMessage(), "ERROR");
+            $_SESSION['errorMsg'] = "Errore durante l'eliminazione dell'utente: " . $e->getMessage();
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit(); 
+
+            // echo "Error: " . $e->getMessage();
+
         }
     }
 
 
     public function updateUser(User $user)
     {
+        $logger = Logger::getInstance();
+
         try {
             $sql = "UPDATE users SET firstname = :firstname, lastname = :lastname, email = :email WHERE id = :id";
             $stm = $this->conn->prepare($sql);
@@ -88,11 +103,15 @@ class Admin extends User
             }
         } catch (\PDOException $e) {
             echo "Error: " . $e->getMessage();
+            $logger->log($e->getMessage(), "ERROR");
+
         }
     }
 
     public function upgradeUserToAdmin(User $user)
     {
+        $logger = Logger::getInstance();
+
         try {
             $sql = "UPDATE users SET isAdmin = true WHERE id = :id";
             $stm = $this->conn->prepare($sql);
@@ -103,7 +122,10 @@ class Admin extends User
                 return false;
             }
         } catch (\PDOException $e) {
+            $logger->log($e->getMessage(), "ERROR");
+
             echo "Error: " . $e->getMessage();
+
         }
     }
 
@@ -111,6 +133,8 @@ class Admin extends User
 
     public function downgradeAdminToUser(Admin $admin)
     {
+        $logger = Logger::getInstance();
+
         try {
             $sql = "UPDATE users SET isAdmin = false WHERE id = :id";
             $stm = $this->conn->prepare($sql);
@@ -121,12 +145,16 @@ class Admin extends User
                 return false;
             }
         } catch (\PDOException $e) {
+            $logger->log($e->getMessage(), "ERROR");
+
             echo "Error: " . $e->getMessage();
         }
     }
 
     public function updateAdmin(Admin $admin)
     {
+        $logger = Logger::getInstance();
+
         try {
             $sql = "UPDATE users SET firstname = :firstname, lastname = :lastname, email = :email, password = :password WHERE id = :id";
             $stm = $this->conn->prepare($sql);
@@ -143,6 +171,7 @@ class Admin extends User
                 return false;
             }
         } catch (\PDOException $e) {
+            $logger->log($e->getMessage(), "ERROR");
             echo "Error: " . $e->getMessage();
         }
     }

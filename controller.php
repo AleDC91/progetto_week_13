@@ -6,8 +6,10 @@ require_once("database.php");
 require_once 'classes/UserDTO.php';
 require_once 'classes/User.php';
 require_once 'classes/Admin.php';
+require_once 'classes/Logger.php';
 
 
+$logger = Logger::getInstance();
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -52,17 +54,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (strlen($firstName) < 2) {
             $_SESSION["errorMsg"] = "First name <b> " . $firstName . " </b>troppo corto";
+            $logger->log("Registrazione nome troppo corto");
             header("Location: http://localhost/register.php");
             exit();
+
         } elseif (strlen($lastName) < 2) {
             $_SESSION["errorMsg"] = "Last name <b> " . $lastName . " </b>troppo corto";
+            $logger->log("Registrazione lastname troppo corto");
+
             header("Location: http://localhost/register.php");
             exit();
         } elseif (strlen($_POST['password']) < 8) {
             $_SESSION["errorMsg"] = "La password deve essere di almeno 8 caratteri";
+            $logger->log("Registrazione password troppo corta");
             header("Location: http://localhost/register.php");
             exit();
         } elseif (in_array($email, $dbEmailList)) {
+            $logger->log("Email $email già presente");
             $_SESSION["errorMsg"] = "Indirizzo email già presente nel database! 
                                      Inserisci una nuova email o fai il login";
             header("Location: http://localhost/register.php");
@@ -74,19 +82,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $userData = $userDTO->getUserByEmail($email);
             $_SESSION["successMsg"] = "Nuovo utente registrato!";
             $_SESSION["isLogged"] = true;
-            $_SESSION["userName"] = $firstname;
-            $_SESSION["lastName"] = $lastname;
+            $_SESSION["userName"] = $firstName;
+            $_SESSION["lastName"] = $lastName;
             $_SESSION["userEmail"] =  $email;
             $_SESSION["userID"] = $userData->id;
-            $_SESSION["userPassword"] = $userData->password ;}
+            $_SESSION["userPassword"] = $userData->password;
+            $logger->log("Registrazione effettuata utente: $firstName, ID: ". $userData['id']);
+        }
             header("Location: http://localhost/index.php");
             exit();
         }
     }
 
     if (isset($_POST['logout'])) {
+        $logger->log("Logout " . $_SESSION['userName']);
         session_unset();
         setcookie("auth_token", "", time() - 1);
+
         header("Location: http://localhost/login.php");
         exit();
     }
@@ -106,6 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         if (strlen($password) < 8) {
             $_SESSION["errorMsg"] = "Password deve essere di almeno 8 caratteri";
+            $logger->log("Registrazione password troppo corta");
             header("Location: http://localhost/login.php");
             exit();
         }
@@ -113,6 +126,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $loggedMatch = false;
         foreach ($allUsers as $user) {
             if ($user["email"] == $email && password_verify($password, $user["password"])) {
+            $logger->log("Utente ID: " . $user['id'] . " Loggato" );
+
                 $loggedMatch = true;
                 $_SESSION["isLogged"] = true;
                 $_SESSION["userName"] = $user["firstname"];
@@ -142,6 +157,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             $_SESSION["errorMsg"] = "Email o password errati";
+            $logger->log("Tentativo login");
+
             header("Location: http://localhost/login.php");
             exit();
         }
@@ -150,17 +167,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["delete-user"])) {
         if (isset($_SESSION["isAdmin"]) || $_SESSION["isAdmin"]) {
             $userData = $userDTO->getUserById($_POST["userId"]);
-            // var_dump($userData);
-            $userToDelete = new User($userData['firstname'], $userData['lastname'], $userData['email'], $userData['password'], $userData['id']);
-            $admin = new Admin($_SESSION["userName"], $_SESSION["lastName"], $_SESSION["userEmail"], $_SESSION["userPassword"]);
-            $admin->setPDO($conn);
-            if ($admin->deleteUser($userToDelete)) {
-                $_SESSION["successMsg"] = "Utente Eliminato";
+            if($userData){
+                $userToDelete = new User($userData['firstname'], $userData['lastname'], $userData['email'], $userData['password'], $userData['id']);
+                $admin = new Admin($_SESSION["userName"], $_SESSION["lastName"], $_SESSION["userEmail"], $_SESSION["userPassword"]);
+                $admin->setPDO($conn);
+                if ($admin->deleteUser($userToDelete)) {
+                    $_SESSION["successMsg"] = "Utente Eliminato";
+                $logger->log("Utente ID: ".$userData['id'] . "eliminato");
+    
+                } else {
+                    $logger->log("Utente ID: ".$userData['id'] . "NON eliminato correttamente", "ERROR");
+    
+                    $_SESSION["errorMsg"] = "Errore nell'eliminazione dell'utente";
+                };
+                header("Location: http://localhost/admin.php");
+                exit();
             } else {
-                $_SESSION["errorMsg"] = "Errore nell'eliminazione dell'utente";
-            };
-            header("Location: http://localhost/admin.php");
-            exit();
+                $logger->log("Utente non trovato nel DB", "ERROR");
+                $_SESSION['errorMsg'] = "Errore durante l'eliminazione dell'utente: ";
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit(); 
+    
+            }
+
         }
     }
 
