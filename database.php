@@ -13,12 +13,17 @@ namespace db {
 
         private function __construct(array $config)
         {
-
-            $serverConn = new PDO(
-                $config['driver'] . ":host=" . $config['host'] . "; port=" . $config['port'] . ";",
-                $config['user'],
-                $config['password']
-            );
+            $logger = Logger::getInstance();
+            try {
+                $serverConn = new PDO(
+                    $config['driver'] . ":host=" . $config['host'] . "; port=" . $config['port'] . ";",
+                    $config['user'],
+                    $config['password']
+                );
+            } catch (\PDOException $e) {
+                $logger->log("Database non inizializzato ". $e->getMessage(), "ERROR");
+                exit();
+            }
 
             DBInitializer::initializeDatabase($serverConn, $config);
 
@@ -31,10 +36,16 @@ namespace db {
 
         public static function getInstance(array $config)
         {
-            if (!static::$instance) {
-                static::$instance = new DB_PDO($config);
+            $logger = Logger::getInstance();
+            try {
+                if (!static::$instance) {
+                    static::$instance = new DB_PDO($config);
+                }
+                return static::$instance;
+            } catch (\PDOException $e) {
+                $logger->log("Database non inizializzato ", "ERROR");
+                exit();
             }
-            return static::$instance;
         }
 
         public function getConnection()

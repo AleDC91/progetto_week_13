@@ -242,7 +242,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($admin->updateUser($userToUpdate)) {
                 $_SESSION["successMsg"] = "Dati utente aggiornati!";
             } else {
-                $_SESSION["errorMsg"] = "Errore nell'aggiornamento dei dati";
+                $_SESSION["errorMsg"] = "Dati invariati, utente non aggiornato";
             };
             header("Location: http://localhost/admin.php");
             exit();
@@ -312,7 +312,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION["lastName"] =  $update->lastname;
                 $_SESSION["userEmail"] = $update->email;
                 $_SESSION["userPassword"] =  $newPassword;
-
+                $logger->log("Admin Data updated");
                 var_dump($_SESSION);
             }
             header("Location: http://localhost/admin.php");
